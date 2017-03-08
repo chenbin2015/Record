@@ -1,75 +1,44 @@
-接着[上一篇](http://www.jianshu.com/p/a9b3705d4613),使用babel打包时对单个文件打包的问题，可能有其他解决方案，此处就不研究了，想使用webpack来解决的，请看此篇
-####1.文件构成
-
-![Paste_Image.png](http://upload-images.jianshu.io/upload_images/5087999-afaeb79c7c6c25bd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
-demo.js ,可以看到，使用ES6的语法应用了helloWorld，并执行了方法
-
+####1.安装基本的依赖
+``` 
+npm i babel-cli babel-core babel-preset-es2015 babel-preset-stage-0
 ```
-import helloWorld from './helloWorld.js'
-helloWorld()
+####2.创建.babelrc来定义编码规范
 ```
-helloWorld.js,导出一个Test方法，在上一句中被重命名了
-
+{
+  "presets": ["es2015", "stage-0"]
+}
+```
+####3.用ES6编写一个helloWorld.js,并且编写一个index.js来调用这个helloWorld.js
+helloWorld.js
 ```
 export default function Test(){
 	console.log(123)
 }
 ```
-index.html,引用生成后的js
+index.js
 
 ```
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-	<title>Document</title>
-</head>
-<body>
-	<script type="text/javascript" src='./dist/index.js'></script>
-</body>
-</html>
+import index from './index.js'
+console.log(index)
 ```
-
-package.json，定义了依赖的包，只有babel-loader,webpack
+####4.使用babel来进行转码
 ```
-{
-  "name": "webpack",
-  "version": "1.0.0",
-  "description": "This is a webpack demo",
-  "main": "demo.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "webpack"
-  ],
-  "author": "chenbin",
-  "license": "MIT",
-  "dependencies": {
-    "babel-loader": "^6.4.0",
-    "webpack": "^2.2.1"
-  }
-}
+babel index.js --out-dir ./build
 ```
-webpack.config.js,定义入口，出口，loader
-
+####5.生成的代码
 ```
-module.exports={
-	entry:'./demo.js',
-	output:{
-		filename:'index.js',
-		path:'./dist'
-	},
-  module: {
-     loaders: [
-	    {
-	      test: /\.js$/,
-	      exclude: /(node_modules|bower_components)/,
-	      loader: 'babel-loader'
-	    }
-	  ]
-  }
-}
+'use strict';
+var _index = require('./index.js');
+var _index2 = _interopRequireDefault(_index);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+console.log(_index2.default);
 ```
-重点看package.json和webpack.config.js,可以看见只引用了两个依赖，并且只使用了一个loader即可完成
+####6.结论
+从生成的代码来看，里面还有require之类的，可以在node环境中执行看看效果，但是在执行的时候，helloWorld的代码并没有转换，直接报错了，所以，这只是用来转换单个文件使用的，建议还是采用webpack来进行转码，直接可以用在html中
+注：有兴趣的同志可以试试转化以下代码
+```
+let arr=[1,2,3]
+arr.map((ele)=>{
+	console.log(ele)
+})
+```
