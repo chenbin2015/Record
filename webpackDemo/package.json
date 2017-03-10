@@ -12,6 +12,7 @@
   "author": "chenbin",
   "license": "MIT",
   "dependencies": {
+    "babel-core": "^6.23.1",
     "babel-loader": "^6.4.0",
     "webpack": "^2.2.1"
   }

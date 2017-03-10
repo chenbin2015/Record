@@ -1,14 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import  reducers from './reducer'
-import HelloWorld from './components/helloWorld'
+import reducers from './reducers'
 
-const store = createStore(reducers,{text:'hello world'})
+import App from './containers/App'
+
+const store = createStore(reducers)
 const rootEl = document.getElementById('root')
-
 const render = () => ReactDOM.render(
-  <HelloWorld></HelloWorld>,
+  <Provider store={store}>
+  	<App></App>
+  </Provider>,
   rootEl
 )
 

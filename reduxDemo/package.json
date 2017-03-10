@@ -4,7 +4,7 @@
   "description": "This is a redux demo",
   "main": "index.js",
   "scripts": {
-    "start": "babel index.js --out-dir ./build &&./node_modules/.bin/webpack"
+    "start": "./node_modules/.bin/webpack -w"
   },
   "repository": {
     "type": "git",
