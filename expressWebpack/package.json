@@ -1,0 +1,32 @@
+{
+  "name": "expresswebpack",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./server/index.js",
+    "w": "webpack --config ./webpack"
+  },
+  "dependencies": {
+    "body-parser": "~1.16.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.0",
+    "express": "~4.14.1",
+    "hbs": "^4.0.1",
+    "jade": "~1.11.0",
+    "morgan": "~1.7.0",
+    "sass-loader": "^6.0.3",
+    "serve-favicon": "~2.3.2",
+    "webpack": "^2.2.1"
+  },
+  "devDependencies": {
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-register": "^6.23.0",
+    "css-loader": "^0.27.1",
+    "postcss": "^5.2.16",
+    "style-loader": "^0.13.2",
+    "webpack": "^2.2.1",
+    "webpack-dev-middleware": "^1.10.1",
+    "webpack-hot-middleware": "^2.17.1"
+  }
+}
