@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <title>单例模式</title>
+  <style type="text/css">
+  .hide {
+    display: none;
+  }
+  
+  .dialog {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .dialog .dim {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: .5;
+  }
+  
+  .dialog .content {
+    position: relative;
+    align-self: center;
+    width: 20rem;
+    height: 10rem;
+    text-align: center;
+    background: #fff;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  
+  .dialog .buttonList {
+    width: 100%;
+    position: absolute;
+    bottom: 1rem;
+    left: 0px;
+  }
+  
+  .dialog .text {
+    margin-top: 3rem;
+  }
+  
+  .dialog .buttonList button {
+    background: transparent;
+    border: 0px;
+    width: 4rem;
+    height: 2rem;
+    color: #fff;
+    outline: none;
+  }
+  
+  .dialog .buttonList button:first-child {
+    background: #f0a0f0;
+  }
+  
+  .dialog .buttonList button:nth-of-type(2) {
+    background: #999;
+  }
+  </style>
+</head>
+
+<body>
+  <script type="text/javascript">
+  var Dialog = function(option) {
+    this.instance = null
+    option = option || {
+      callback: () => {},
+      text: ''
+    }
+    this.callback = option.callback
+    this.text = option.text
+    this.dom = null
+    this._setHTML()
+
+  }
+
+  Dialog.getInstance = function(option) {
+    if (!this.instance) {
+      this.instance = new Dialog(option)
+    }else{
+    	this.instance._setText(option.text)
+    }
+    return this.instance
+  }
+
+  Dialog.prototype.show = function() {
+    this.dom.classList = ['dialog']
+  }
+
+  Dialog.prototype.hide = function() {
+    this.dom.classList = ['hide']
+  }
+
+  Dialog.prototype._setHTML = function() {
+    var dialog = document.createElement('div')
+    dialog.className = 'dialog'
+    dialog.innerHTML = `
+		<div class="dim"></div>
+		<div class="content">
+  		<p class="text">${this.text}</p>
+  		<div class="buttonList">
+    		<button>确认</button>
+    		<button>取消</button>
+  		</div>
+		</div>`
+
+    document.body.appendChild(dialog)
+    this.dom = dialog
+    this._bindEvent()
+  }
+
+  Dialog.prototype._bindEvent = function() {
+    var buttonList = document.querySelector('.buttonList').querySelectorAll('button')
+    if (buttonList && buttonList.length == 2) {
+      buttonList[0].addEventListener('click', () => {
+        this.callback()
+      })
+      buttonList[1].addEventListener('click', () => {
+        this.hide()
+      })
+    }
+  }
+
+  Dialog.prototype._setText=function(text){
+  	this.dom.querySelector('.text').innerHTML=text
+  }
+  </script>
+  <script type="text/javascript">
+  addEventListener('load', function() {
+    var option = {
+      callback: () => {
+        alert('我是第一个')
+      },
+      text: '我是第一个'
+    }
+    var option2 = {
+      callback: () => {
+        alert('我是第二个')
+      },
+      text: '我是第二个'
+    }
+    var option3 = {
+      callback: () => {
+        alert('我是第三个')
+      },
+      text: '我是第三个'
+    }
+    var option4 = {
+      callback: () => {
+        alert('我是第四个')
+      },
+      text: '我是第四个'
+    }
+    var dialog = new Dialog(option)
+    var dialog2 = new Dialog(option2)
+
+    var dialog3 = Dialog.getInstance(option3)
+    var dialog4 = Dialog.getInstance(option4)
+    console.log('dialog==dialog2:', dialog == dialog2)
+    console.log('dialog3===dialog4:', dialog3 == dialog4)
+  })
+  </script>
+</body>
+
+</html>
