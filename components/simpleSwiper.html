@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" Content="text/html; charset=utf-8;">
+  <title>simple swiper demo</title>
+  <meta name="description" content="移动端触摸滑动" />
+  <meta name="viewport" content="width=640,user-scalable=no">
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    overflow-x: hidden;
+  }
+  
+  li {
+    list-style: none;
+  }
+  
+  .m-slider {
+    width: 600px;
+    margin: 50px 20px;
+    overflow: hidden;
+  }
+  
+  .m-slider .cnt {
+    position: relative;
+    left: 0;
+    width: 3000px;
+  }
+  
+  .m-slider ul {
+    transition: all 1s;
+  }
+  
+  .m-slider .cnt li {
+    float: left;
+    width: 600px;
+  }
+  
+  .m-slider .cnt img {
+    display: block;
+    width: 100%;
+    height: 450px;
+  }
+  
+  .m-slider .cnt p {
+    margin: 20px 0;
+  }
+  
+  .m-slider .icons {
+    text-align: center;
+    color: #000;
+  }
+  
+  .m-slider .icons span {
+    margin: 0 5px;
+  }
+  
+  .m-slider .icons .curr {
+    color: red;
+  }
+  
+  .f-anim {
+    -webkit-transition: left .2s linear;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="m-slider">
+    <ul class="cnt" id="slider">
+      <li>
+        <img src="http://imglf1.ph.126.net/qKodH3sZoVbPalKFtHS9mw==/6608946691259322175.jpg">
+        <p>20140813镜面的世界，终究只是倒影。看得到你的身影，却触摸不到你的未来</p>
+      </li>
+      <li>
+        <img src="http://imglf1.ph.126.net/40-jqH_j6EoCWnZOixY2pA==/4798022453110310215.jpg">
+        <p>20140812锡林浩特前往东乌旗S101必经之处，一条极美的铁路。铁路下面是个小型的盐沼，淡淡的有了一丝天空之境的感觉。可惜在此玩了一个小时也没有看见一列火车经过，只好继续赶往东乌旗。</p>
+      </li>
+      <li>
+        <img src="http://imglf0.ph.126.net/Jnmi2y51zVdjKAYlibtpFw==/3068640196117481166.jpg">
+        <p>20140811水的颜色为什么那么蓝，我也纳闷，反正自然饱和度和对比度拉完就是这个颜色的</p>
+      </li>
+      <li>
+        <img src="http://imglf1.ph.126.net/79GPsjhwiIj8e-0nP5MsEQ==/6619295294699949331.jpg">
+        <p>海洋星球3重庆天气热得我想卧轨自杀</p>
+      </li>
+      <li>
+        <img src="http://imglf1.ph.126.net/40-jqH_j6EoCWnZOixY2pA==/4798022453110310215.jpg">
+        <p>以上这些作品分别来自两位设计师作为观者，您能否通过设计风格进行区分</p>
+      </li>
+    </ul>
+    <div class="icons" id="icons">
+      <span class="curr">1</span>
+      <span>2</span>
+      <span>3</span>
+      <span>4</span>
+      <span>5</span>
+    </div>
+  </div>
+  <script type="text/javascript">
+  try {
+    var h = document.documentElement.clientHeight
+    var mybody = document.querySelector('.m-slider')
+    var content = mybody.querySelector('ul');
+    var width = mybody.querySelector('ul').querySelector('li').clientWidth
+    var isMove = false
+    var currentTranslateX = 0
+    var tempTranslateX = 0 //这是在元素上滑动但是还没有切换时滑动的距离
+    var displacement = 0 // 位移
+    var direction = 0
+    var slideCount = 1 //每次滑动几个，注意，对于全屏的，如果>1会导致看不到某些slide，此处不讨论
+    mybody.style.height = h + 'px';
+
+    //返回角度
+    function GetSlideAngle(dx, dy) {
+      return Math.atan2(dy, dx) * 180 / Math.PI;
+    }
+
+    //根据起点和终点返回方向 1：向上，2：向下，3：向左，4：向右,0：未滑动
+    function GetSlideDirection(startX, startY, endX, endY) {
+      var dy = startY - endY;
+      var dx = endX - startX;
+      var result = 0;
+      //如果滑动距离太短
+      if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+        return result;
+      }
+      var angle = GetSlideAngle(dx, dy);
+      if (angle >= -45 && angle < 45) {
+        result = 4;
+      } else if (angle >= 45 && angle < 135) {
+        result = 1;
+      } else if (angle >= -135 && angle < -45) {
+        result = 2;
+      } else if ((angle >= 135 && angle <= 180) || (angle >= -180 && angle < -135)) {
+        result = 3;
+      }
+      return result;
+    }
+
+    function getCurrentTranslate() {
+      var style = window.getComputedStyle(content);
+      var matrix = new WebKitCSSMatrix(style.webkitTransform);
+      return {
+        x: matrix.m41,
+        y: matrix.m42
+      }
+    }
+
+    //向左滑
+    function beginSlide(direction) {
+      if (isMove == true) {
+        return
+      }
+      isMove=true
+      content.style.transition = '500ms'
+      switch (direction) {
+        case 3:
+          currentTranslateX -= parseInt(width * slideCount)
+          break
+        case 4:
+          currentTranslateX += parseInt(width * slideCount)
+          break
+      }
+
+      content.style.webkitTransform = 'translateX(' + currentTranslateX + 'px)'
+    }
+
+    content.addEventListener('webkitTransitionEnd', function() {
+        isMove = false
+    })
+      //滑动处理
+    var startX, startY;
+    mybody.addEventListener('touchstart', function(ev) {
+    	if(isMove==true)
+    		return
+      ev.preventDefault();
+      startX = ev.touches[0].pageX;
+      startY = ev.touches[0].pageY;
+      currentTranslateX = getCurrentTranslate().x
+      displacement=0
+    }, false);
+
+    mybody.addEventListener('touchmove', function(ev) {
+    	if(isMove==true)
+    		return
+      var endX, endY;
+      ev.preventDefault();
+      endX = ev.changedTouches[0].pageX;
+      endY = ev.changedTouches[0].pageY;
+      displacement =  parseInt((endX - startX))
+      direction = GetSlideDirection(startX, startY, endX, endY);
+      content.style.webkitTransform = 'translateX(' + (parseInt(currentTranslateX)+displacement) + 'px)'
+      content.style.webkitTransition = '0ms'
+    }, false);
+    mybody.addEventListener('touchend', function() {
+      if(isMove==true)
+    		return
+      if (Math.abs(displacement) > 100) {
+        beginSlide(direction)
+      } else if(Math.abs(displacement) > 0){
+      	isMove=true
+        content.style.webkitTransform = 'translateX('+currentTranslateX+'px)'
+        content.style.webkitTransition = '300ms'
+      }
+
+    })
+  } catch (e) {
+    alert(e.message)
+  }
+  </script>
+</body>
+
+</html>
