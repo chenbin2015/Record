@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <title>debounce实现的搜索，作者:陈斌</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+  <style type="text/css">
+  * {
+    margin: 0px;
+    padding: 0px;
+  }
+  
+  input {
+    margin: 20px;
+    width: 200px;
+    height: 40px;
+    border: 1px solid #777;
+    border-radius: 5px;
+  }
+  
+  li {
+    margin-left: 50px;
+  }
+  </style>
+</head>
+
+<body>
+  <input type="text" name="" id="txtKeyword">
+  <ul id="results"></ul>
+  <script type="text/javascript">
+  /*
+		Author：陈斌
+		Github:https://github.com/chenbin2015
+		Email:chenbinqq164@163.com
+		QQ:421416050
+  */
+  try {
+    var txtKeyword = document.querySelector('#txtKeyword')
+    var results = document.querySelector('#results')
+    var dataList = [
+      'Chinese',
+      'Japanese',
+      'Korea',
+      'India',
+      'USA',
+      'Canada',
+      'England',
+      'Russia',
+      'Germany',
+      'France',
+      'Spain'
+    ]
+    var timeout = null
+    txtKeyword.addEventListener('input', function() {
+      timeout && clearTimeout(timeout)
+      var self = this
+      timeout = setTimeout(function() {
+        results.innerHTML = ''
+        var filterList = []
+        if (self.value.length > 0) {
+          for (var i = 0, len = dataList.length; i < len; i++) {
+            if (dataList[i].indexOf(self.value) > -1) {
+              filterList.push(dataList[i])
+            }
+          }
+          if (filterList.length > 0) {
+            var fragment = document.createDocumentFragment();
+            for (var i = 0, len = filterList.length; i < len; i++) {
+              var item = document.createElement('li')
+              item.innerHTML = filterList[i]
+              fragment.appendChild(item)
+            }
+            results.appendChild(fragment)
+          }
+        }
+      }, 800)
+
+    })
+  } catch (e) {
+    alert(e.message)
+  }
+
+  /*
+  timeout = setTimeout(()=>{
+       results.innerHTML = ''
+        var filterList = dataList.filter((ele) => {
+          return ele.indexOf(this.value) > -1
+        })
+        if (filterList.length > 0) {
+
+          var fragment = document.createDocumentFragment();
+          for (var i = 0, len = filterList.length; i < len; i++) {
+            var item = document.createElement('li')
+            item.innerHTML = filterList[i]
+            fragment.appendChild(item)
+          }
+          results.appendChild(fragment)
+        }
+      }, 800)
+      */
+  </script>
+</body>
+
+</html>
