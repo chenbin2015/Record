@@ -8,7 +8,7 @@ export default class HelloWorld extends Component {
   }
   
   componentWillReceiveProps(newProps){
-  	console.log(newProps)
+  	//console.log(newProps)
   }
   render() {
     return (

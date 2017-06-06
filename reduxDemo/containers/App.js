@@ -10,14 +10,11 @@ class App extends Component {
 
     this.state = {};
   }
-  componentDidMount() {
-    console.log(this.props)
-  }
   render() {
     const { helloChan, helloWorldActons } = this.props
     return (
       <div>
-      	<HelloWorld onClick={helloWorldActons.changeText} text={this.props.text}></HelloWorld>
+      	<HelloWorld onClick={helloWorldActons.changeText} text={helloChan.config.text}></HelloWorld>
 			</div>
     )
   }

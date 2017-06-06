@@ -4,7 +4,8 @@
   "description": "This is a redux demo",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/.bin/webpack -w"
+    "w": "webpack -w",
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
@@ -21,10 +22,14 @@
   },
   "homepage": "https://github.com/chenbin2015/reduxDemo#readme",
   "dependencies": {
+    "express": "^4.15.3",
+    "koa-webpack-middleware": "^1.0.5",
+    "qs": "^6.4.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.3",
-    "redux": "^3.6.0"
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "babel": "^6.23.0",
@@ -35,6 +40,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "jsx-loader": "^0.13.2",
+    "react-hot-loader": "^3.0.0-beta.6",
     "webpack": "^2.2.1"
   }
 }
