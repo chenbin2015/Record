@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'
+
 // @pureRender
 export default class HelloWorld extends Component {
   constructor(props) {

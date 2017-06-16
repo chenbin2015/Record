@@ -1,10 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import * as HelloWorldActions from '../actions/HelloWorld'
 import HelloWorld from '../components/helloWorld'
 // @pureRender
-class App extends Component {
+class Index extends Component {
   constructor(props) {
     super(props);
 
@@ -15,7 +15,7 @@ class App extends Component {
     return (
       <div>
       	<HelloWorld onClick={helloWorldActons.changeText} text={helloChan.config.text}></HelloWorld>
-			</div>
+		  </div>
     )
   }
 }
@@ -26,4 +26,4 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   helloWorldActons: bindActionCreators(HelloWorldActions, dispatch)
 });
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

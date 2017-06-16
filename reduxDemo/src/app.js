@@ -7,13 +7,15 @@ import qs from 'qs'
 import webpack from 'webpack'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
-import webpackConfig from './webpack.config'
+import webpackConfig from '../webpack.config'
 
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
+import { RouterContext, match } from 'react-router'
 
 import configureStore from './store/configureStore'
+import routes from './client/routes'
 import App from './containers/App'
 import { fetchCounter } from './api/counter'
 
@@ -22,39 +24,37 @@ const port = 3000
 
 // Use this middleware to set up hot module reloading via webpack.
 const compiler = webpack(webpackConfig)
-app.use(webpackDevMiddleware(compiler, { noInfo: true,hot: true, publicPath: webpackConfig.output.publicPath }))
+app.use(webpackDevMiddleware(compiler, { noInfo: true, hot: true, publicPath: webpackConfig.output.publicPath }))
 app.use(webpackHotMiddleware(compiler))
 
-// This is fired every time the server side receives a request
-app.use(handleRender)
-
 function handleRender(req, res) {
-  // Query our mock API asynchronously
-  fetchCounter(apiResult => {
-    // Read the counter from the request, if provided
-    const params = qs.parse(req.query)
-    const helloChan = {config:{
-    	text: apiResult || '我是服务端返回的值' 
-    }}
-
-    // Compile an initial state
-    const initialState = { helloChan }
-
-    // Create a new Redux store instance
-    const store = configureStore(initialState)
-    // Render the component to a string
-    const html = renderToString(
-      <Provider store={store}>
-        <App />
-      </Provider>
-    )
-
-    // Grab the initial state from our Redux store
-    const finalState = store.getState()
-    // Send the rendered page back to the client
-    res.send(renderFullPage(html, finalState))
+  match({ routes: routes, location: req.url }, (err, redirectLocation, renderProps) => {
+    if (err) {
+      res.status(500).end(`server error: ${err}`)
+    } else if (redirectLocation) {
+      res.redirect(redirectLocation.pathname + redirectLocation.search)
+    } else if (renderProps) {
+	    const helloChan = {
+		    config: {
+		      text: '我是服务端返回的值'
+		    }
+		  }
+      const initialState = { helloChan }
+      const store = configureStore(initialState);
+      const html = renderToString(
+        <Provider store={store}>
+            <RouterContext {...renderProps}/>
+        </Provider>
+      )
+      const finalState = store.getState();
+      res.end(renderFullPage(html, finalState));
+    } else {
+      res.status(404).end('404 not found')
+    }
   })
 }
+
+app.use('*', handleRender);
 
 function renderFullPage(html, initialState) {
   return `
@@ -64,7 +64,7 @@ function renderFullPage(html, initialState) {
         <title>Ben's react server side render</title>
       </head>
       <body>
-        <div id="app">${html}</div>
+        <div id="app"><div>${html}</div></div>
         <script>
           window.__INITIAL_STATE__ = ${JSON.stringify(initialState)}
         </script>

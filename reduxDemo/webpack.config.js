@@ -4,8 +4,8 @@ var path = require('path');
 module.exports = {
   devtool: 'inline-source-map',
   entry: [
-    'webpack-hot-middleware/client?reload=true',
-    './index.js'
+    'webpack-hot-middleware/client?path=http://localhost:3001/__webpack_hmr',
+    './src/index.js'
   ],
   output: {
     filename: 'bundle.js',
@@ -17,6 +17,9 @@ module.exports = {
       test: /\.js$/,
       exclude: /(node_modules|bower_components)/,
       loader: ['babel-loader']
+    }, {
+      test: /\.scss$/,
+      loader: ['style-loader', 'css-loader', 'sass-loader']
     }]
   },
   plugins: [
@@ -25,4 +28,3 @@ module.exports = {
     new webpack.NoEmitOnErrorsPlugin()
   ]
 }
-
