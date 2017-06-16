@@ -9,7 +9,7 @@ export default class About extends Component {
   render() {
     return (
       <div>
-      	I'm a web developer
+      	My name is ben chan,I'm a web developer, I like js!
 			</div>
     )
   }

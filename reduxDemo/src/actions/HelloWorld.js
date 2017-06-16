@@ -5,7 +5,7 @@ export function changeText(text) {
     setTimeout(() => {
       return dispatch({
         type: CHANGE_TEXT,
-        payload: '我是客户端返回的值:' + text
+        payload: 'I come from client side:' + text
       })
     }, 300)
   }

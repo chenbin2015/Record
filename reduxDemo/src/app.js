@@ -36,7 +36,7 @@ function handleRender(req, res) {
     } else if (renderProps) {
 	    const helloChan = {
 		    config: {
-		      text: '我是服务端返回的值'
+		      text: 'I come from serve side'
 		    }
 		  }
       const initialState = { helloChan }
