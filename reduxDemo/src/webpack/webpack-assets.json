@@ -1,0 +1,12 @@
+{
+  "javascript": {
+    "main": "/static/bundle.js"
+  },
+  "styles": {},
+  "assets": {
+    "./src/containers/About/main.scss": {
+      "test": "test_1qbej",
+      "_style": ".test_1qbej {\n  color: red; }\n"
+    }
+  }
+}

@@ -5,27 +5,27 @@ import Express from 'express'
 import qs from 'qs'
 
 import webpack from 'webpack'
-//import webpackDevMiddleware from 'webpack-dev-middleware'
-//import webpackHotMiddleware from 'webpack-hot-middleware'
-import webpackConfig from './webpack/webpack.config'
+import webpackDevMiddleware from 'webpack-dev-middleware'
+import webpackHotMiddleware from 'webpack-hot-middleware'
+import webpackConfig from '../webpack/webpack.config'
 
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { RouterContext, match } from 'react-router'
 
-import configureStore from './store/configureStore'
-import routes from './client/routes'
-import App from './containers/App'
-import { fetchCounter } from './api/counter'
+import configureStore from '../store/configureStore'
+import routes from '../client/routes'
+import App from '../containers/App'
+import { fetchCounter } from '../api/counter'
 
 const app = new Express()
 const port = 3000
 
 // Use this middleware to set up hot module reloading via webpack.
-//const compiler = webpack(webpackConfig)
-//app.use(webpackDevMiddleware(compiler, { noInfo: true, hot: true, publicPath: webpackConfig.output.publicPath }))
-//app.use(webpackHotMiddleware(compiler))
+const compiler = webpack(webpackConfig)
+app.use(webpackDevMiddleware(compiler, { noInfo: true, hot: true, publicPath: webpackConfig.output.publicPath }))
+app.use(webpackHotMiddleware(compiler))
 
 function handleRender(req, res) {
   match({ routes: routes, location: req.url }, (err, redirectLocation, renderProps) => {
