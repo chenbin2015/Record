@@ -1,0 +1,13 @@
+* {
+  margin: 0px;
+  padding: 0px; }
+
+.test1 {
+  width: 5.33333rem;
+  height: 5.33333rem;
+  background-color: green; }
+
+.test2 {
+  width: 2rem;
+  height: 2rem;
+  background-color: red; }

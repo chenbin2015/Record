@@ -1,0 +1,16 @@
+{
+  "name": "sass",
+  "version": "1.0.0",
+  "description": "test",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "gulp"
+  },
+  "author": "chenbin",
+  "license": "ISC"
+}

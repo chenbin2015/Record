@@ -1,0 +1,20 @@
+@function toRem($value) {
+  @return $value / 37.5px * 1rem;
+}
+
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+.test1 {
+  width: toRem(200px);
+  height: toRem(200px);
+  background-color: green;
+}
+
+.test2 {
+  width: toRem(75px);
+  height: toRem(75px);
+  background-color: red;
+}

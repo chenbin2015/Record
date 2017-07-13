@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <meta name="viewport" content="initial-scale=1,width=device-width" />
+  <title>Demo</title>
+  <link rel="stylesheet" type="text/css" href="./build/css/main.css">
+
+</head>
+
+<body>
+  <div class="test1"></div>
+  <div class="test2"></div>
+  <ul>
+  	<li>1.安装依赖包:npm i</li>
+  	<li>2.执行命令：npm run test</li>
+  	<li>3.打开index.html</li>
+  </ul>
+  <script type="text/javascript">
+  function setPage() {
+    var meta = document.createElement('meta')
+    meta.setAttribute('name', 'viewport')
+    meta.setAttribute('content', 'initial-scale=' + parseFloat(1 / devicePixelRatio) + ',width=device-width,user-scalable=no')
+
+    document.head.appendChild(meta)
+    var fontSize = parseFloat(document.documentElement.getBoundingClientRect().width / 10)
+    document.documentElement.style.fontSize = fontSize + 'px'
+  }
+  window.addEventListener('load', setPage)
+  window.addEventListener('resize', setPage)
+  </script>
+
+</body>
+
+</html>
