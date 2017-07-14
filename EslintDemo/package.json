@@ -1,0 +1,28 @@
+{
+  "name": "eslintdemo",
+  "version": "1.0.0",
+  "description": "This is a eslint demo",
+  "main": "index.js",
+  "scripts": {
+    "init": "eslint --init",
+    "lint": "eslint index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chenbin2015/Record.git"
+  },
+  "keywords": [
+    "eslint"
+  ],
+  "author": "chenbin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chenbin2015/Record/issues"
+  },
+  "homepage": "https://github.com/chenbin2015/Record#readme",
+  "devDependencies": {
+    "eslint": "^4.2.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-react": "^7.1.0"
+  }
+}
