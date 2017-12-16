@@ -1,0 +1,17 @@
+{
+  "name": "html-meta-for-mobile",
+  "version": "1.0.0",
+  "description": "This is a loader for add viewport ",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack"
+  },
+  "keywords": [
+    "loader"
+  ],
+  "author": "chenbin",
+  "license": "MIT",
+  "dependencies": {
+    "webpack": "^3.10.0"
+  }
+}
