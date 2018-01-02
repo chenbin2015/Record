@@ -9,7 +9,7 @@ import Index from '../containers/Index'
 // - `/item/:id` 显示 `Item` 组件
 const routes = (
   <Route path="/" component={App} >
-  	<IndexRoute component={Index}/>
+  	<Route path="/index" component={Index}/>
     <Route path="a" component={About} />
     <Route path="c" component={Concact} />
   </Route>

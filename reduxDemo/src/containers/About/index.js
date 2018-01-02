@@ -5,7 +5,10 @@ import styles from './main.scss'
 export default class About extends Component {
   constructor(props) {
     super(props);
-    console.log('................styles:', styles)
+    console.log('about')
+  }
+  componentWillMount () {
+    console.log('about')
   }
   render() {
     return (

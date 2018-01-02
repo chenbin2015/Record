@@ -1,0 +1,47 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>文档标题</title>
+  <!-- 开启响应式 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO页面关键词 -->
+  <meta name="keywords" content="your keywords">
+  <!-- SEO页面描述 -->
+  <meta name="description" content="your description">
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  #c1 {
+    display: block;
+    margin: 10px auto;
+    border: 1px solid red;
+    width: 300;
+    height: 300;
+  }
+  </style>
+</head>
+
+<body>
+  <canvas width="600" height="600" id="c1"></canvas>
+  <script type="text/javascript" src="../base.js"></script>
+  <script type="text/javascript" src="./index.js"></script>
+  <script type="text/javascript">
+  var option = {
+    id: 'c1',
+    data: {
+      value: 10,
+      startColor: 'green',
+      endColor: 'red',
+      bgColor: 'gray',
+      radius: 120
+    }
+  }
+  new Circle(option)
+  </script>
+</body>
+
+</html>

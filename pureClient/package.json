@@ -1,0 +1,21 @@
+{
+  "name": "pureclient",
+  "version": "1.0.0",
+  "description": "This is pure react client render ",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run start",
+    "build": ""
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "chenbin",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^15.6.1"
+  },
+  "devDependencies": {
+    "webpack": "^3.6.0"
+  }
+}

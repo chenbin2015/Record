@@ -1,0 +1,78 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>文档标题</title>
+  <!-- 开启响应式 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO页面关键词 -->
+  <meta name="keywords" content="your keywords">
+  <!-- SEO页面描述 -->
+  <meta name="description" content="your description">
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  #c1 {
+    display: block;
+    margin: 10px auto;
+    border: 1px solid red;
+    width: 300;
+    height: 300;
+  }
+  </style>
+</head>
+
+<body>
+  <canvas width="600" height="600" id="c1"></canvas>
+  <script type="text/javascript">
+  var c1 = document.querySelector('#c1')
+  var ctx = c1.getContext('2d')
+  ctx.translate(c1.width / 2, c1.height / 2)
+  ctx.arc(0, 0, 100, 0, Math.PI * 2)
+  ctx.lineWidth = 5
+  ctx.stroke()
+  ctx.beginPath()
+
+  var currentAngle = 0
+  var currentProcess = 0
+  var currentPercentage = 0
+
+  function process(endAngle) {
+    var step = Math.PI / 60
+    if (currentAngle + step > endAngle) {
+      currentAngle = endAngle
+    } else {
+      currentAngle += step
+    }
+    ctx.beginPath()
+    ctx.arc(0, 0, 100, 0, currentAngle)
+    ctx.lineCap = 'round'
+    var lingrad = ctx.createLinearGradient(0, 0, 0, 150);
+    lingrad.addColorStop(0, '#f00');
+    lingrad.addColorStop(1, '#ff0');
+    ctx.lineWidth = 20
+    ctx.strokeStyle = lingrad
+    ctx.stroke()
+    ctx.beginPath()
+
+    currentProcess = (parseFloat(currentAngle / endAngle) * 100).toPrecision(2)
+    ctx.clearRect(-50, -50, 120, 100)
+    ctx.font = '30px Arial'
+    ctx.fillText((parseFloat(+currentAngle / (Math.PI * 2))*100).toPrecision(2) + '%', -30, 5)
+    if (currentAngle >= endAngle) {
+      currentProcess = 1
+      currentAngle = endAngle
+      return
+    }
+    requestAnimationFrame(() => {
+      process(endAngle)
+    }, 100)
+  }
+  process(Math.PI * 3 / 2)
+  </script>
+</body>
+
+</html>

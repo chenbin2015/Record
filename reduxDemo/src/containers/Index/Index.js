@@ -13,6 +13,7 @@ class Index extends Component {
     this.state = {};
   }
   render() {
+    console.log('index page')
     const { helloChan, helloWorldActons } = this.props
     return (
       <div>

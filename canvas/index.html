@@ -1,0 +1,45 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>文档标题</title>
+  <!-- 开启响应式 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO页面关键词 -->
+  <meta name="keywords" content="your keywords">
+  <!-- SEO页面描述 -->
+  <meta name="description" content="your description">
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  #c1 {
+    display: block;
+    margin: 10px auto;
+    border: 1px solid red;
+    width: 300;
+    height: 300;
+  }
+  </style>
+</head>
+
+<body>
+  <canvas width="500" height="500" id="c1"></canvas>
+  <script type="text/javascript">
+  var c1 = document.querySelector('#c1')
+  var ctx = c1.getContext('2d')
+  ctx.translate(c1.width / 2, c1.height / 2)
+ 
+  ctx.lineWidth = 5
+  ctx.arc(0, 0,100,0,Math.PI/3)
+  var lingrad = ctx.createRadialGradient(100,100,100,100,100,0)
+  lingrad.addColorStop(0, 'red');
+  lingrad.addColorStop(1, 'green');
+  ctx.strokeStyle = lingrad
+  ctx.stroke()
+  </script>
+</body>
+
+</html>
