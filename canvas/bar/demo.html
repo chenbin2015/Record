@@ -1,0 +1,108 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>文档标题</title>
+  <!-- 开启响应式 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO页面关键词 -->
+  <meta name="keywords" content="your keywords">
+  <!-- SEO页面描述 -->
+  <meta name="description" content="your description">
+  <style>
+  * {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  #c1 {
+    width: 400px;
+    height: 300px;
+  }
+  </style>
+</head>
+
+<body>
+  <canvas width="800" height="600" id="c1"></canvas>
+  <script type="text/javascript">
+  var c1 = document.querySelector('#c1')
+  var ctx = c1.getContext('2d')
+  var xaxisLength = 700
+  var yaxisLength = 400
+  var arrowLength = 20
+  var interval = 150
+  var lineWidth = 20
+  var c1 = document.querySelector('#c1')
+  var ctx = c1.getContext('2d')
+  ctx.translate(40, 500)
+  ctx.lineWidth = 1
+  // 画y轴
+  ctx.moveTo(0, 0)
+  ctx.lineTo(0, -yaxisLength)
+  // y轴左边箭头
+  ctx.moveTo(0, -yaxisLength)
+  ctx.lineTo(-arrowLength, -(yaxisLength - arrowLength))
+  // y轴右边箭头
+  ctx.moveTo(0, -yaxisLength)
+  ctx.lineTo(arrowLength, -(yaxisLength - arrowLength))
+  // 画x轴
+  ctx.moveTo(0, 0)
+  ctx.lineTo(xaxisLength, 0)
+  // x轴上边箭头
+  ctx.moveTo(xaxisLength, 0)
+  ctx.lineTo(xaxisLength - arrowLength, -arrowLength)
+  // x轴下边箭头
+  ctx.moveTo(xaxisLength, 0)
+  ctx.lineTo(xaxisLength - arrowLength, arrowLength)
+  ctx.stroke()
+
+  var data = [{
+      value: 200,
+      title: '第一季度',
+      startColor: 'red',
+      endColor: 'green'
+    },
+    {
+      value: 120,
+      title: '第二季度',
+      startColor: 'orange',
+      endColor: 'red'
+    },
+    {
+      value: 300,
+      title: '第三季度',
+      startColor: 'purple',
+      endColor: 'green'
+    },
+    {
+      value: 60,
+      title: '第四季度',
+      startColor: 'gray',
+      endColor: 'red'
+    }
+  ]
+  data.unshift({
+    value: 0,
+    title: ''
+  })
+  ctx.font = '20px Arial'
+  ctx.lineWidth = lineWidth
+  interval = xaxisLength / data.length
+  for (var i = 1, len = data.length; i < len; i++) {
+    ctx.beginPath()
+    ctx.strokeStyle = data[i].color
+    ctx.moveTo(interval * i, 0)
+    ctx.lineTo(interval * i, -data[i].value)
+    var y = -data[i].value - 20
+    var linearGradientObj = ctx.createLinearGradient(interval * i, 0, interval * i, -data[i].value)
+    linearGradientObj.addColorStop(0, data[i].startColor)
+    linearGradientObj.addColorStop(1, data[i].endColor)
+    ctx.strokeStyle = linearGradientObj
+    ctx.fillText(`${data[i].title}(${data[i].value})`, interval * i - 30, y)
+    ctx.stroke()
+
+  }
+  </script>
+</body>
+
+</html>
