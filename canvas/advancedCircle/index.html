@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <meta name="viewport" content="width=device-width" />
+  <title>Circle test</title>
+  <style type="text/css">
+  * {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  canvas {
+    display: inline-block;
+    width: 20rem;
+    height: 10rem;
+    margin: 1rem auto;
+    border: 1px solid #777;
+  }
+  </style>
+</head>
+
+<body>
+  <canvas id='c1' ></canvas>
+  <canvas id='c2' ></canvas>
+  <canvas id='c3' ></canvas>
+  <canvas id='c4' ></canvas>
+  <canvas id='c5' ></canvas>
+  <canvas id='c6' ></canvas>
+  <canvas id='c7' ></canvas>
+  <script type="text/javascript" src="./index.js"></script>
+  <script type="text/javascript">
+  for (var i = 1; i < 8; i++) {
+    new Circle({
+      id: '#c'+i,
+      value: 100*Math.random()
+    })
+  }
+  </script>
+</body>
+
+</html>
