@@ -2,60 +2,75 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>前端路由测试</title>
-    <style type="text/css">
-    a {
-        display: block;
-        margin: 20px;
-    }
-    </style>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <title>前端路由测试</title>
+  <style type="text/css">
+  a {
+    display: block;
+    margin: 20px;
+  }
+  </style>
 </head>
 
 <body>
-    <div id="app"></div>
-    <a to="/index">首页</a>
-    <a to="/about">关于我们</a>
-    <a to="/concact">联系我们</a>
-    <script type="text/javascript">
-    var route = {
-        index: '/index',
-        concact: '/concact',
-        about: '/about'
+  <div id="app"></div>
+  <a to="/index">首页</a>
+  <a to="/about">关于我们</a>
+  <a to="/concact">联系我们</a>
+  <script type="text/javascript">
+  var route = {
+    index: {
+      name: '/index',
+      script: '/javascript/index.js'
+    },
+    concact: {
+      name: '/concact',
+      script: '/javascript/concact.js'
+    },
+    about: {
+      name: '/about',
+      script: '/javascript/about.js'
     }
-    document.body.addEventListener('click', (e) => {
-        const pathname = e.target.getAttribute('to')
-        history.pushState({}, null, pathname)
-        var app = document.querySelector('#app')
-        initPage(pathname)
+  }
+  document.body.addEventListener('click', (e) => {
+    const pathname = e.target.getAttribute('to')
+    history.pushState({}, null, pathname)
+    initPage(pathname)
+  })
+  window.onload = function() {
+    initPage(location.pathname)
+  }
+  window.addEventListener("popstate", function(e) {
+    initPage(location.pathname)
+  })
 
-    })
-    window.onload = function() {
-        initPage(location.pathname)
+  function initPage(pathname) {
+    var script = document.createElement('script')
+    if (pathname) {
+      let text = ''
+      switch (pathname) {
+        case route.index.name:
+          text = '首页'
+          script.src = route.index.script
+          break
+        case route.concact.name:
+          text = '联系我们'
+          script.src = route.concact.script
+          break
+        case route.about.name:
+          text = '关于我们'
+          script.src = route.about.script
+          break
+        default:
+          script.src = route.index.script
+          text = '首页'
+      }
+      //console.log(text)
+      //app.innerHTML = text
+      document.body.appendChild(script)
     }
-    window.addEventListener("popstate", function(e) {
-        initPage(location.pathname)
-    })
-
-    function initPage(pathname) {
-        if (pathname) {
-            let text = ''
-            switch (pathname) {
-                case route.index:
-                    text = '首页'
-                    break
-                case route.concact:
-                    text = '联系我们'
-                    break
-                case route.about:
-                    text = '关于我们'
-                    break
-            }
-            console.log(text)
-            app.innerHTML = text
-        }
-    }
-    </script>
+  }
+  </script>
 </body>
 
 </html>
