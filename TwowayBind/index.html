@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <title>Document</title>
+  <style type="text/css">
+    span{
+      color:red;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <input /><br/>
+    你好，<span v-model={{name}}></span><br/>
+    热烈欢迎<span v-model={{name}}></span>来到我们的网站
+  </div>
+  <script type="text/javascript" src="./compiler.js"></script>
+  <script type="text/javascript">
+  function reDefineObj(obj) {
+    if (!obj || Object.prototype.toString.call(obj).toLowerCase() != '[object object]') {
+      return
+    }
+    Object.keys(obj).forEach((key) => {
+      // 取值，并且把这个值存起来，要是在defineProperty后再取值，会陷入死循环
+      var value = obj[key]
+      Object.defineProperty(obj, key, {
+        set: (newVal) => {
+          if (value != newVal) {
+            value = newVal
+          }
+          
+          // 设置值时，需要通知所有的订阅者，即那些用模板语言定义的属性，demo中用的{{data}}这种
+          Dep.notify()
+        },
+        get: () => {
+          // 此处的会在新建watch时做一个判断，如果有，则add,没有就不add
+          if (Dep.target) {
+            Dep.addSub(Dep.target)
+          }
+          return value
+        }
+      })
+      // 递归
+      reDefineObj(value)
+    })
+    return obj
+  }
+
+
+  var Dep = {
+    subs: [],
+    addSub: function(sub) {
+      Dep.subs.push(sub)
+    },
+    notify: function() {
+      Dep.subs.forEach((item) => {
+        item.update()
+      })
+    },
+    target: null
+  }
+
+  function Watcher(vm, exp, cb) {
+    this.cb = cb;
+    this.exp = exp;
+    this.vm = vm
+    this.value = this.get(); // 将自己添加到订阅器的操作
+  }
+
+  Watcher.prototype = {
+    update: function() {
+      this.value = setValueByExp(this, this.exp);
+      this.cb && this.cb(this.value)
+    },
+    get: function() {
+      Dep.target = this; // 缓存自己
+      var value = setValueByExp(this, this.exp); // 强制执行监听器里的get函数
+      Dep.target = null; // 释放自己
+      return value;
+    }
+  }
+
+  function setValueByExp(self, exp) {
+    var value = self.vm.data
+    var s = exp.split('.')
+    s.forEach(item => {
+      if (value[item] || value[item] == '') {
+        value = value[item]
+      }
+    })
+    return value
+  }
+
+  var obj = {
+    name: '张三',
+    parent: {
+      name: '爸爸',
+      parent: {
+        name: '爷爷',
+        parent: {
+          name: '老祖'
+        }
+      }
+    }
+  }
+  var vm = {
+    data: reDefineObj(obj)
+  }
+
+  new Compile('#app', vm)
+  document.querySelector('input').addEventListener('input', function() {
+    obj.name = event.target.value
+  })
+  </script>
+</body>
+
+</html>
