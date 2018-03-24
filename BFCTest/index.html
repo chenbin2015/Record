@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .test {
+        width: 200px;
+        height: 200px;
+        background: rgba(0, 0, 0, .4);
+        float: left;
+    }
+
+    .surround {
+        width: 300px;
+        height: 200px;
+        background: green;
+        overflow: hidden;
+    }
+
+    .marginMerge {
+        overflow: hidden;
+    }
+
+    .marginMergeChild1 {
+        margin: 50px;
+        width: 100px;
+        height: 50px;
+        background: red;
+    }
+
+    .marginMergeChild2Parent {
+        overflow: hidden;
+    }
+
+    .marginMergeChild2 {
+        margin: 50px;
+        width: 100px;
+        height: 50px;
+        background: orange;
+        overflow: hidden;
+    }
+
+    .test3 {
+        padding: 20px;
+        border: 1px solid red;
+    }
+
+    .test3 div {
+        width: 200px;
+        height: 200px;
+        color: #fff;
+        text-align: center;
+    }
+
+    .test3 div:nth-of-type(1) {
+        background: green;
+    }
+
+    .test3 div:nth-of-type(2) {
+        background: red;
+        float: left;
+    }
+
+    .test3 div:nth-of-type(3) {
+        background: orange;
+        width: 300px;
+    }
+
+    .test3 div:nth-of-type(4) {
+        background: black;
+    }
+
+    .column {
+        width: 31.33%;
+        background-color: green;
+        float: left;
+        margin: 0 1%;
+    }
+
+    .column:last-child {
+        float: none;
+        overflow: hidden;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="test">
+    </div>
+    <div class="surround">中国人是最好的，最厉害的，啦啦啦啦啦啦啦啦啦啦了哈哈哈哈你信不信， 中国人是最好的，最厉害的，啦啦啦啦啦啦啦啦啦啦了哈哈哈哈你信不信，中国人是最好的，最厉害的，啦啦啦啦啦啦啦啦啦啦了哈哈哈哈你信不信， 中国人是最好的，最厉害的，啦啦啦啦啦啦啦啦啦啦了哈哈哈哈你信不信
+    </div>
+    <div class="marginMerge">
+        <div class="marginMergeChild1"></div>
+        <div class="marginMergeChild2Parent">
+            <div class="marginMergeChild2"></div>
+        </div>
+    </div>
+    <div class="test3">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+    </div>
+    <div class="container">
+        <div class="column">column 1</div>
+        <div class="column">column 2</div>
+        <div class="column">column 3</div>
+    </div>
+</body>
+
+</html>

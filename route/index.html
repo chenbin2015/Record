@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>前端路由测试</title>
+    <style type="text/css">
+    a {
+        display: block;
+        margin: 20px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <a to="/index">首页</a>
+    <a to="/about">关于我们</a>
+    <a to="/concact">联系我们</a>
+    <script type="text/javascript">
+    var route = {
+        index: './index',
+        concact: '/concact',
+        about: '/about'
+    }
+    document.body.addEventListener('click', (e) => {
+        const url = e.target.getAttribute('to')
+       
+        var app = document.querySelector('#app')
+        var text = ''
+        console.log('url:', url)
+        switch (url) {
+            case route.index:
+                text = '首页'
+                break
+            case route.concact:
+                text = '首页'
+                break
+            case route.about:
+                text = '首页'
+                break
+        }
+        console.log(text)
+        app.innerHTML = text
+         history.pushState({}, null, url)
+    })
+    window.onload = function() {
+        console.log(1111)
+    }
+    window.addEventListener("popstate", function(e) {
+        console.log(e)
+    })
+    </script>
+</body>
+
+</html>

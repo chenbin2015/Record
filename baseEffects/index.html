@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Document</title>
+    <style>
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+    
+    .test {
+        width: 10rem;
+        height: 10rem;
+        background: green;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="test"></div>
+    <script type="text/javascript">
+    function setPage() {
+        var dpr = devicePixelRatio
+        var scale = parseFloat(1 / dpr)
+        var meta = document.createElement('meta');
+        meta.setAttribute('name', 'viewport')
+        meta.setAttribute('content', 'initial-scale=' + scale + ',width=device-width')
+        document.head.appendChild(meta)
+        var fontSize = 0
+        if (dpr == 1) {
+            fontSize = '60px'
+        } else if (dpr == 2) {
+            fontSize = '40px'
+        } else if (dpr == 3) {
+            fontSize = '20px'
+        }
+        document.documentElement.style.fontSize = fontSize
+    }
+    window.addEventListener('load',setPage)
+     window.addEventListener('resize',setPage)
+    </script>
+</body>
+
+</html>
