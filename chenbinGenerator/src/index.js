@@ -3,6 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, combineReducers  } from 'redux'
+
 //没有开启服务端，所以使用hash
 import createHistory from 'history/createHashHistory'
 import { Route } from 'react-router'
@@ -15,7 +16,7 @@ const history = createHistory()
 const middleware = routerMiddleware(history)
 const store = createStore(
     combineReducers({
-        reducers,
+        store:reducers,
         router: routerReducer
     }),
     applyMiddleware(middleware)

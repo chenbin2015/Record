@@ -13,7 +13,7 @@ module.exports = {
                                 "targets": {
                                     "browsers": ["last 2 versions", "safari >= 7", "iOS >= 8"]
                                 }
-                            }], 'react'
+                            }], 'react','es2015', 'stage-0'
                         ],
                         "plugins": [
                             "transform-runtime",
