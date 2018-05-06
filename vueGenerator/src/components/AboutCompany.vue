@@ -10,11 +10,11 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'About'
+      msg: 'about company'
     }
   },
   mounted () {
-    console.log('this.$route.params111:', this.$route.params)
+    console.log('this.$route.params2222:', this.$route.params)
   }
 }
 </script>
@@ -25,6 +25,6 @@ h1, h2 {
 }
 
 div {
-  color: red;
+  color: blue;
 }
 </style>
