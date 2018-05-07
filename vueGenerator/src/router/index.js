@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '../components/HelloWorld'
-import About from '../components/About'
-import AboutCompany from '../components/AboutCompany'
+const HelloWorld = () => import('../components/HelloWorld')
+const About = () => import('../components/About')
+const AboutCompany = () => import('../components/AboutCompany')
 
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [{
     path: '/',
     name: 'HelloWorld',

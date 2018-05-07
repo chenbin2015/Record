@@ -4,9 +4,9 @@
   "description": "this is a react generator",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --mode development",
-    "build": "webpack --mode production",
-    "server": "webpack-dev-server --mode development --open"
+    "start": "rm -rf dist && webpack --mode development",
+    "build": "rm -rf dist &&  webpack --mode production",
+    "server": "webpack-dev-server --mode production --open"
   },
   "keywords": [
     "vue",

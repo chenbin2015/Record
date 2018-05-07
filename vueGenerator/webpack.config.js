@@ -60,5 +60,10 @@ module.exports = {
     alias: {
       vue: 'vue/dist/vue.js'
     }
+  },
+  output: {
+    filename: `[name].[hash:8].js`,
+    chunkFilename: `[name].[chunkhash:8].js`
   }
+
 }
