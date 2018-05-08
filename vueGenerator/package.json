@@ -6,7 +6,7 @@
   "scripts": {
     "start": "rm -rf dist && webpack --mode development",
     "build": "rm -rf dist &&  webpack --mode production",
-    "server": "webpack-dev-server --mode production --open"
+    "server": "webpack-dev-server --mode development --open"
   },
   "keywords": [
     "vue",
@@ -40,6 +40,7 @@
     "html-webpack-plugin": "^3.1.0",
     "mini-css-extract-plugin": "^0.2.0",
     "node-sass": "^4.8.3",
+    "px2rem-loader": "^0.1.9",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
     "vue-loader": "^15.0.7",
@@ -52,6 +53,7 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "history": "^4.7.2",
+    "lib-flexible": "^0.3.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-loadable": "^5.3.1",

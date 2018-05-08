@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <div class="test">213</div>
     <router-view/>
   </div>
 </template>
@@ -26,5 +27,11 @@ h1, h2 {
 
 div {
   color: red;
+  font-size: 60px;
+}
+.test{
+  width:200px;
+  height: 200px;
+  background: green;
 }
 </style>

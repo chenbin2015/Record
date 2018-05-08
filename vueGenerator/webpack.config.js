@@ -33,13 +33,20 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [MiniCssExtractPlugin.loader, "css-loader?modules=true", "sass-loader"]
-        /* use: ["style-loader", "css-loader?modules=true", "sass-loader"] 开发模式*/
       },
       {
         test: /\.css$/,
         use: [
-          'vue-style-loader',
-          'css-loader'
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'px2rem-loader',
+            // options here
+            options: {
+              remUni: 37.5,
+              remPrecision: 8
+            }
+          }
         ]
       }
     ]
@@ -47,11 +54,12 @@ module.exports = {
   plugins: [
     new HtmlWebPackPlugin({
       template: "./src/index.html",
-      filename: "./index.html"
+      filename: "./index.html",
+      inject: true
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css"
+      filename: "[name].[hash].css",
+      chunkFilename: "[id].[hash].css"
     }),
     new VueLoaderPlugin()
   ],
@@ -63,7 +71,8 @@ module.exports = {
   },
   output: {
     filename: `[name].[hash:8].js`,
-    chunkFilename: `[name].[chunkhash:8].js`
+    chunkFilename: `[name].[chunkhash:8].js`,
+    publicPath: '/'
   }
 
 }
