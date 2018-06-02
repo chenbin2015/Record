@@ -9,6 +9,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import "RCTBaiduMapViewManager.h"
 
 @implementation AppDelegate
 
@@ -29,6 +30,7 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  [RCTBaiduMapViewManager initSDK:@"3XUk4tXl95G6bMUEBdvNHyLa"]
   return YES;
 }
 

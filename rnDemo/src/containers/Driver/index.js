@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import { observer, inject } from 'mobx-react'
 import { YMMLoading, YMMTab } from '../../components'
-import OrderList from './components/OrderList'
+import OrderList from './components/OrderList2'
 import styles from './styles'
 
 @inject(`dirverStore`) // 注入对应的store
@@ -98,7 +98,7 @@ export default class Driver extends Component {
       <View style={styles.container}>
         <YMMTab currentIndex={currentIndex} dataList={dataList} callback={this.handleTabChange} />
         {this.renderList()}
-        <YMMLoading visible={loading} color='#ff0' />
+        
         <Button primary onPress={() => this.store.plus()} title='add'>
         </Button>
         <Text>{num}</Text>

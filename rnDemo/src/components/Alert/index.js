@@ -67,7 +67,7 @@ export default class Alert extends Component {
         if (len <= 2 && index < buttonList.length - 1) {
           buttons.push(<View style={styles.buttonSplitLine} key={`split${index}`}></View>)
         } else if (len > 2) {
-          buttons.push(<View style={styles.splitLine}></View>)
+          buttons.push(<View style={styles.splitLine} key={`splitTwo${index}`}></View>)
         }
       })
     }

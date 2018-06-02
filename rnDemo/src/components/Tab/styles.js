@@ -8,7 +8,11 @@ export default StyleSheet.create({
     justifyContent: 'space-around',
     flexDirection: 'column',
     height: 30,
-    width: '100%'
+    width: '100%',
+    marginBottom: 1,
+    borderStyle: 'solid',
+    borderBottomWidth: .3,
+    borderBottomColor: 'rgba(52, 52, 52 ,.5)'
   },
   tabList: {
     width: '100%',
@@ -16,13 +20,18 @@ export default StyleSheet.create({
     justifyContent: 'space-around',
     flexDirection: 'row'
   },
+  itemWrap: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   currentTab: {
-    color: 'rgb(187, 153, 97)'
+    color: '#fa871e'
   },
   line: {
     position: 'absolute',
     top: 29,
-    height: 1,
-    backgroundColor: 'rgb(187, 153, 97)'
+    height: 2,
+    backgroundColor: '#fa871e'
   }
 })
