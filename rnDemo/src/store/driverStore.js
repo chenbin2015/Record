@@ -18,7 +18,7 @@ class DriverStore extends CommonStore {
 
   @action
   getReactList = async () => {
-    const res = await this.fetchData('https://cms.cekid.com/publish/998/newindex2017.json')
+    const res = await this.fetchData('')
     if (res && res.data) {
       this.list = res.data.children
     }
