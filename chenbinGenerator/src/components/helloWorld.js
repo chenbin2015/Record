@@ -6,6 +6,13 @@ export default class HelloWorld extends Component {
 
     this.state = {};
   }
+  componentDidMount(){
+    console.log('aaaaaaa:', this.context.store)
+  }
+  shouldComponentUpdate(nextProps){
+    console.log('33333333')
+    return true
+  }
   
   componentWillReceiveProps(newProps){
     console.log(newProps)

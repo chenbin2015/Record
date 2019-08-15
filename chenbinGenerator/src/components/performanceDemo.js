@@ -6,15 +6,16 @@ export default class HelloWorld extends Component {
   }
   shouldComponentUpdate(nextProps){
   	const { currentIndex, index } = nextProps
-  	console.log('currentIndex == index:', currentIndex == index)
   	return currentIndex == index
+    //return true
   }
-  
+
   render() {
+    //console.log('@@@@@@@@@@render@@@@@@@@@@@@@@@')
   	const { currentIndex, index } = this.props
     return (
       <div style={{margin:'20px'}}>
-        <button onTouchStart={()=>{this.props.onClick(Math.random())}}>change Text</button>
+        <button onClick={()=>{this.props.onClick(Math.random())}}>change Text</button>
             <div style={{background: currentIndex == index ? 'red': 'green'}}>{this.props.text}</div>
       </div>
     )
