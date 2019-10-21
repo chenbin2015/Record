@@ -3,7 +3,7 @@
     <el-table :data="meetings" style="width: 100%">
       <el-table-column prop="date" label="会议日期" width="180"></el-table-column>
       <el-table-column prop="name" label="会议主持人" width="180"></el-table-column>
-      <el-table-column prop="address" label="会议主题"></el-table-column>
+      <el-table-column prop="subject" label="会议主题"></el-table-column>
       <el-table-column prop="address" label="会议地址"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
