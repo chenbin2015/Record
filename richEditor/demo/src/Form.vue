@@ -8,22 +8,16 @@
         <li>实现基本的富文本编辑,撤销与重做</li>
         <li>当鼠标滚动或者点击某一行时,自动暂停当前播放音频</li>
       </ol>
+      <p>以下为2019-10-23日更新内容</p>
+      <ol>
+        <li>新增频谱交互</li>
+        <li>新增时间节点</li>
+        <li>新增倍速播放</li>
+        <li>新增预览功能</li>
+      </ol>
     </el-tab-pane>
     <el-tab-pane label="基本信息" name="first">
-      <el-form ref="form" label-width="100px" :model="meeting">
-        <el-form-item label="会议名称：">
-          <el-input v-model="meeting.subject"></el-input>
-        </el-form-item>
-        <el-form-item label="主持人：">
-          <el-input v-model="meeting.name"></el-input>
-        </el-form-item>
-        <el-form-item label="会议地址：">
-          <el-input v-model="meeting.address"></el-input>
-        </el-form-item>
-        <el-form-item label="会议时间：">
-          <el-date-picker v-model="meeting.date"></el-date-picker>
-        </el-form-item>
-      </el-form>
+      <BasicInfo :meeting="meeting"></BasicInfo>
     </el-tab-pane>
     <el-tab-pane label="会议记录" name="second">
       <el-card class="contextMenu" v-show="showContext" :style="{left:position.x,top:position.y}">
@@ -52,6 +46,11 @@
           <el-button type="primary" @click="handleAddNewLine">确 定</el-button>
         </div>
       </el-dialog>
+      <Preview
+        :show="previewVisible"
+        :info="editContent || initEditContent"
+        :onClose="handleHidePreview"
+      />
       <el-form ref="form" label-width="100px" :model="meeting">
         <el-form-item label="会议记录：">
           <div id="app">
@@ -72,6 +71,7 @@
                   :value="item.value"
                 >{{item.text}}</option>
               </select>
+              <el-button type="text" class="preview" @click="handleShowPreview">预览</el-button>
             </div>
             <!-- <div
               id="divContent"
@@ -81,31 +81,51 @@
               @click="handleClick"
             >-->
             <div class="editContent" id="divContent" @click="hideContext" @mousewheel="onScroll">
-              <div v-for="(item,index) in meeting.info" :key="item.time">
-                <strong
+              <div v-for="(item,index) in meeting.info" :key="item.time" class="content">
+                <!-- <strong
                   contenteditable="false"
                   v-html="`第${index+1}条数据:[${item.time}秒] ${item.author}开始说：`"
-                ></strong>
-                <span
-                  v-html="item.content"
-                  contenteditable="true"
-                  @click="handleSelectOneClick"
-                  @blur="handleBlur"
-                  :class="item.hightlight?'hightlight':''"
-                ></span>
+                ></strong>-->
+                <section class="ddl">
+                  <DropDownList :name="item.author" :list="meeting.authors" :index="index"></DropDownList>
+                </section>
+                <section>
+                  <span
+                    v-html="item.content"
+                    contenteditable="true"
+                    @click="handleSelectOneClick"
+                    @blur="handleBlur(index)"
+                    :class="item.hightlight?'hightlight':''"
+                  ></span>
+                  <button
+                    @click="item.handle"
+                    :title="item.text"
+                    v-for="item in contextList"
+                    v-bind:key="item.icon"
+                    class="editButton editButtonMore"
+                  >
+                    <icon :name="item.icon"></icon>
+                  </button>
+                </section>
               </div>
             </div>
           </div>
         </el-form-item>
 
         <el-form-item label="音频：">
-          <audio
+          <Spectrum
+            :stepList="meeting.info"
+            :src="meeting.audio"
+            :onTimeUpdate="onTimeUpdate"
+            :onAudioReady="onAudioReady"
+          />
+          <!-- <audio
             @timeupdate="onTimeUpdate"
             id="play"
             :src="meeting.audio"
             style="width: 400px;height:50px;"
             controls
-          ></audio>
+          ></audio>-->
         </el-form-item>
       </el-form>
     </el-tab-pane>
@@ -115,18 +135,24 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import moment from "moment";
-import ToolBar from "./components/ToolBar.vue";
+import Spectrum from "./components/Spectrum.vue";
+import Preview from "./components/Preview.vue";
+import DropDownList from "./components/DropDownList.vue";
+import BasicInfo from "./components/BasicInfo.vue";
+import constants from "./constants/index";
 
 export default {
   name: "app",
   data: function() {
     return {
+      editContent: null, // 编辑的数据，需要用一个单独的变量来存储，因为不能实时去更新store的值，不然撤销重做都失效了
       min: 0,
       max: 0,
       play: null, // 播放dom
       currentLineIndex: 0, // 当前行的索引
       showContext: false,
-      dialogFormVisible: false,
+      dialogFormVisible: false, // 新增dialog
+      previewVisible: false, // 预览面板
       newLineInfo: {
         startTime: "",
         author: ""
@@ -137,11 +163,13 @@ export default {
       },
       contextList: [
         {
+          icon: "delete",
           label: "删除该行",
           value: 0,
           handle: this.handleDeleteLine
         },
         {
+          icon: "add",
           label: "下方添加一行",
           value: 1,
           handle: this.handleShowAddNewLine
@@ -156,63 +184,36 @@ export default {
         {
           icon: "chexiao",
           text: "撤销",
-          handle: this.handleExecCommand.bind(this, "undo"),
+          handle: this.handleExecCommand.bind(this, "undo", false, null),
           disable: true
         },
         {
           icon: "zhongzuo",
           text: "重做",
-          handle: this.handleExecCommand.bind(this, "redo"),
+          handle: this.handleExecCommand.bind(this, "redo", false, null),
           disable: true
         },
         {
           icon: "bold",
           text: "加粗",
-          handle: this.handleExecCommand.bind(this, "bold"),
+          handle: this.handleExecCommand.bind(this, "bold", false, null),
           disable: false
         },
         {
           icon: "qingxie",
           text: "倾斜",
-          handle: this.handleExecCommand.bind(this, "italic"),
+          handle: this.handleExecCommand.bind(this, "italic", false, null),
           disable: false
         }
       ],
-      fontSize: [
-        {
-          text: "fonSize",
-          value: 0
-        },
-        {
-          text: "1",
-          value: 1
-        },
-        {
-          text: "2",
-          value: 2
-        },
-        {
-          text: "3",
-          value: 3
-        },
-        {
-          text: "4",
-          value: 4
-        },
-        {
-          text: "5",
-          value: 5
-        },
-        {
-          text: "6",
-          value: 6
-        },
-        {
-          text: "7",
-          value: 7
-        }
-      ]
+      fontSize: constants.fontSize
     };
+  },
+  components: {
+    Spectrum,
+    Preview,
+    DropDownList,
+    BasicInfo
   },
   created() {
     this.$store.dispatch("meeting/getMeetingById", this.$route.query.id);
@@ -221,26 +222,36 @@ export default {
     let that = this;
     divContent.oncontextmenu = function() {
       that.showContext = true;
-      that.setCurrentLineIndex();
+      that.setCurrentLineIndex(event);
       return false;
     };
     this.play = document.querySelector("#play");
   },
   computed: mapState({
-    meeting: state => state.meeting.meeting
+    meeting: state => state.meeting.meeting,
+    initEditContent: state =>
+      state.meeting.meeting.info
+        ? state.meeting.meeting.info.map(item => item.content)
+        : []
   }),
   methods: {
+    onAudioReady: function(play) {
+      this.play = play;
+    },
     //内容区域滚动时,暂停播放
     onScroll: function() {
       this.play.pause();
     },
     // 播放时间改变时
-    onTimeUpdate: function() {
+    onTimeUpdate: function(currentTime) {
       try {
         const { info } = this.meeting;
-        const { currentTime } = this.play;
+        // const { currentTime } = this.play;
         for (let i = 0; i < info.length - 1; i++) {
-          if (currentTime >= info[i].time && currentTime < info[i + 1].time) {
+          if (
+            Math.ceil(currentTime) >= info[i].time &&
+            Math.ceil(currentTime) < info[i + 1].time
+          ) {
             this.currentLineIndex = i;
           }
         }
@@ -249,24 +260,45 @@ export default {
         }
         this.setScrollPosition();
         this.$store.dispatch("meeting/selectOneLine", this.currentLineIndex);
+        console.log(11111);
       } catch (e) {
         console.log("error:", e.message);
       }
     },
     // 输入失去焦点时
-    handleBlur: function() {
-      if (event.target.innerHTML === "") {
+    handleBlur: function(index) {
+      console.log("blur");
+      let that = this;
+      const { innerHTML } = event.target;
+      if (innerHTML === "") {
         event.target.innerHTML = "请输入内容";
+      } else {
+        // setTimeout(() => {
+        //   that.$store.dispatch("meeting/modifyOneLine", {
+        //     currentLineIndex: index,
+        //     newContent: innerHTML
+        //   });
+        // }, 0);
+
+        let editContent = [];
+        divContent.querySelectorAll("span").forEach(item => {
+          editContent.push(item.innerHTML);
+        });
+        this.editContent = editContent;
       }
+      return true;
     },
     // 隐藏右键
     hideContext: function() {
       this.showContext = false;
     },
+    // 显示新增行的dialog
     handleShowAddNewLine: function() {
       this.dialogFormVisible = true;
       this.showContext = false;
+      this.setCurrentLineIndex(event);
     },
+    // 新增行
     handleAddNewLine: function() {
       const { startTime, author } = this.newLineInfo;
       let msg = "";
@@ -283,7 +315,7 @@ export default {
         });
         return;
       }
-
+      console.log("this.currentLineIndex:", this.currentLineIndex);
       this.$store.dispatch("meeting/addNewLine", {
         currentLineIndex: this.currentLineIndex,
         data: {
@@ -294,7 +326,9 @@ export default {
       });
       this.dialogFormVisible = false;
     },
+    // 删除行
     handleDeleteLine: function() {
+      this.setCurrentLineIndex(event);
       this.$confirm("确定删除吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -310,15 +344,16 @@ export default {
     },
     // 点击选择某一行时
     handleSelectOneClick: function() {
-      this.hideContext();
-      this.setCurrentLineIndex();
-      this.$store.dispatch("meeting/selectOneLine", this.currentLineIndex);
-      this.play.currentTime = this.meeting.info[this.currentLineIndex].time;
-      this.play.pause();
+      var that = this;
+      that.hideContext();
+      that.setCurrentLineIndex(event);
     },
+    // 执行命令
     handleExecCommand: function(command, second = false, param) {
+      console.log("commanad", command);
       document.execCommand(command, second, param);
     },
+    // 文字大小改变时
     handleFontSizeChange: function() {
       let fontSize = event.target.value;
       if (fontSize === 0) {
@@ -327,6 +362,7 @@ export default {
       // // console.log(fonSize);
       this.handleExecCommand("fontSize", false, fontSize);
     },
+    // 已作废
     handleContentChange: function(e) {
       const { innerHTML } = e.target;
 
@@ -351,6 +387,7 @@ export default {
       this.currentTextIndex = index;
       console.log(index);
     },
+    // 已作废
     handleKeyDownChange: function(e) {
       var index = this.getCaretCharacterOffsetWithin(
         divContent.children[this.currentTargetIndex]
@@ -401,26 +438,37 @@ export default {
         console.log("confirm:");
       }
     },
-    // 设置当前行的索引
-    setCurrentLineIndex: function() {
+    handleShowPreview: function() {
+      console.log(111);
+      this.previewVisible = true;
+    },
+    handleHidePreview: function() {
+      this.previewVisible = false;
+    },
+    // 1.设置当前行的索引
+    // 2.设置音频频谱的位置
+    // 3.to-do:设置播放当前命中的进度
+    setCurrentLineIndex: function(eventTarget) {
       const divContent = document.querySelector("#divContent");
-      const { pageX, pageY } = event;
+      const { pageX, pageY } = eventTarget;
       this.position = {
         x: pageX + "px",
         y: pageY + "px"
       };
-      divContent.querySelectorAll("span").forEach((item, index) => {
-        const bounding = item.getBoundingClientRect();
-        const { left, right, top, bottom } = bounding;
-        if (
-          pageX >= left &&
-          pageX <= right &&
-          pageY >= top &&
-          pageY <= bottom
-        ) {
-          this.currentLineIndex = index;
-        }
-      });
+      divContent
+        .querySelectorAll("span[contenteditable]")
+        .forEach((item, index) => {
+          const bounding = item.getBoundingClientRect();
+          const { left, right, top, bottom } = bounding;
+          if (
+            pageX >= left &&
+            pageX <= right &&
+            pageY >= top &&
+            pageY <= bottom
+          ) {
+            this.currentLineIndex = index;
+          }
+        });
       // 以下为设置新增一行时的最大值和最小值
       // 如果只有一行
       if (this.meeting.info.length === 1) {
@@ -439,13 +487,20 @@ export default {
         }
       }
       this.newLineInfo.startTime = this.min;
+      this.$store.dispatch("meeting/selectOneLine", this.currentLineIndex);
+      // this.play.currentTime = this.meeting.info[this.currentLineIndex].time;
+      // this.play.play(this.meeting.info[this.currentLineIndex].time);
+      this.play.seekTo(
+        this.meeting.info[this.currentLineIndex].time / this.play.getDuration()
+      );
+      this.play.pause();
     },
     // 设置滚动的位置
     setScrollPosition: function() {
       const divContent = document.querySelector("#divContent");
       const divWrap = document.querySelector("#divWrap");
       const currentHightlightObj = divContent
-        .querySelectorAll("span")
+        .querySelectorAll("span[contenteditable]")
         [this.currentLineIndex].getBoundingClientRect();
       const divContentBounding = divContent.getBoundingClientRect();
       //console.log("currentHightlightObj:", currentHightlightObj.y);
@@ -453,7 +508,7 @@ export default {
       if (currentHightlightObj.bottom > divContentBounding.bottom) {
         const scrollY = currentHightlightObj.bottom - divContentBounding.bottom;
         //divWrap.style.transform = `translateY(${-scrollY}px)`;
-        console.log("scrollY:", scrollY);
+        // console.log("scrollY:", scrollY);
         divContent.scrollTo(0, divContent.scrollTop + scrollY);
       }
       if (currentHightlightObj.top < divContentBounding.top) {
@@ -557,6 +612,11 @@ li {
   background: #ddd;
   border-radius: 2px;
 }
+.editButtonMore {
+  margin-left: 5px;
+  margin-right: 0px;
+  padding: 5px;
+}
 .editContent {
   scroll-behavior: smooth;
   height: calc(100% - 71px);
@@ -572,6 +632,16 @@ li {
 .editContent div {
   border-bottom: 1px solid #999;
   margin-bottom: 20px;
+}
+.editContent .content {
+  display: flex;
+  align-items: flex-start;
+}
+.editContent .content .ddl {
+  flex: 1;
+  white-space: nowrap;
+  margin-right: 10px;
+  line-height: 10px;
 }
 .contextMenu {
   position: fixed;
@@ -589,5 +659,8 @@ li {
 }
 .hightlight {
   color: red;
+}
+.preview {
+  margin-left: 10px;
 }
 </style>

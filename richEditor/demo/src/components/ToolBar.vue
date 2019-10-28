@@ -1,17 +1,18 @@
 <template>
   <div class="toolbar">
     <button
-      :disabled="item.disable"
       @click="item.handle"
       :title="item.text"
       v-for="item in iconList"
       v-bind:key="item.icon"
+      class="editButton"
     >
       <icon :name="item.icon"></icon>
     </button>
-    <select>
+    <select @change="handleFontSizeChange">
       <option v-for="item in fontSize" v-bind:key="item.value" :value="item.value">{{item.text}}</option>
     </select>
+    <el-button type="text" class="preview" @click="handleShowPreview">预览</el-button>
   </div>
 </template>
 
@@ -19,8 +20,8 @@
 export default {
   name: "Toolbar",
   props: {
-    msg: String,
-    divContent: Object
+    iconList: Object,
+    fontSize: Array
   },
   methods: {
     handleExecCommand: function(command) {
