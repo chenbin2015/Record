@@ -8,6 +8,7 @@ const SELECT_ONE_LINE = 'SELECT_ONE_LINE' // 选择一行，用于高亮
 const MODIFY_ONE_LINE = 'MODIFY_ONE_LINE' // 修改一行，用于修改内容
 const SHOW_PREVIEW = 'SHOW_PREVIEW' // 显示预览控制
 const SET_AUTHOR = 'SET_AUTHOR' // 设置当前行的作者
+const SET_SHOW_BUTTON = 'SET_SHOW_BUTTON' // 设置当前行是否显示按钮
 const meeting = {
   namespaced: true,
   state: {
@@ -40,6 +41,9 @@ const meeting = {
     },
     [SET_AUTHOR](state, meeting) {
       state.meeting = meeting
+    },
+    [SET_SHOW_BUTTON](state, meeting) {
+      state.meeting = meeting
     }
   },
   actions: {
@@ -62,6 +66,7 @@ const meeting = {
           const { data } = res.data
           data.info = data.info.map(item => {
             item.hightlight = false
+            item.showEditButton = false
             return item
           })
           let authors = []
@@ -99,7 +104,6 @@ const meeting = {
           item.hightlight = false
         }
       })
-      console.log('currentLineIndex:', currentLineIndex)
       commit(SELECT_ONE_LINE, meeting)
     },
     // 修改一行
@@ -125,6 +129,19 @@ const meeting = {
         }
       })
       commit(SET_AUTHOR, meeting)
+    },
+    // 设置当前行是否显示按钮
+    setCurrentLineShowButton({ commit, state }, payload) {
+      const { meeting } = state
+      console.log('payload:', payload)
+      meeting.info.forEach((item, index) => {
+        if (index === payload.currentLineIndex) {
+          item.showEditButton = true
+        } else {
+          item.showEditButton = false
+        }
+      })
+      commit(SET_SHOW_BUTTON, meeting)
     }
   },
   getters: {

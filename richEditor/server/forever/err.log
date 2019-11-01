@@ -1,0 +1,22 @@
+E:\record\richEditor\server\node_modules\_babel-core@6.26.3@babel-core\lib\transformation\file\index.js:558
+      throw err;
+      ^
+
+SyntaxError: E:/record/richEditor/server/data/newList.js: Unexpected token (8:4)
+   6 |     subject: '秦文琛访谈录',
+   7 |     address: '江苏省南京市北京西路20号江苏省人民政府二楼会议室',
+>  8 |     ,
+     |     ^
+   9 |     audio:
+  10 |       'http://192.168.100.81:3000/media/?id=%E6%88%91%E5%92%8C%E6%88%91%E8%BF%BD%E9%80%90%E7%9A%84%E6%A2%A6.mp3',
+  11 |     info: [
+    at Parser.pp$5.raise (E:\record\richEditor\server\node_modules\_babylon@6.18.0@babylon\lib\index.js:4454:13)
+    at Parser.pp.unexpected (E:\record\richEditor\server\node_modules\_babylon@6.18.0@babylon\lib\index.js:1761:8)
+    at Parser.pp$3.parseIdentifier (E:\record\richEditor\server\node_modules\_babylon@6.18.0@babylon\lib\index.js:4332:10)
+    at Parser.pp$3.parsePropertyName (E:\record\richEditor\server\node_modules\_babylon@6.18.0@babylon\lib\index.js:4156:96)
+    at Parser.pp$3.parseObj (E:\record\richEditor\server\node_modules\_babylon@6.18.0@babylon\lib\index.js:4045:12)
+    at Parser.pp$3.parseExprAtom (E:\record\richEditor\server\node_modules\_babylon@6.18.0@babylon\lib\index.js:3719:19)
+    at Parser.pp$3.parseExprSubscripts (E:\record\richEditor\server\node_modules\_babylon@6.18.0@babylon\lib\index.js:3494:19)
+    at Parser.pp$3.parseMaybeUnary (E:\record\richEditor\server\node_modules\_babylon@6.18.0@babylon\lib\index.js:3474:19)
+    at Parser.pp$3.parseExprOps (E:\record\richEditor\server\node_modules\_babylon@6.18.0@babylon\lib\index.js:3404:19)
+    at Parser.pp$3.parseMaybeConditional (E:\record\richEditor\server\node_modules\_babylon@6.18.0@babylon\lib\index.js:3381:19)

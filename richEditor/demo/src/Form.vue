@@ -20,14 +20,6 @@
       <BasicInfo :meeting="meeting"></BasicInfo>
     </el-tab-pane>
     <el-tab-pane label="会议记录" name="second">
-      <el-card class="contextMenu" v-show="showContext" :style="{left:position.x,top:position.y}">
-        <div
-          @click="item.handle"
-          v-for="item in contextList"
-          :key="item.value"
-          class="text item"
-        >{{item.label }}</div>
-      </el-card>
       <el-dialog title="新增记录" :visible.sync="dialogFormVisible">
         <el-form :model="newLineInfo">
           <el-form-item label="开始时间">
@@ -38,7 +30,14 @@
             (介于{{min}}s-{{max}}s之间,包括边界值)
           </el-form-item>
           <el-form-item label="发言人">
-            <el-input v-model="newLineInfo.author" autocomplete="off"></el-input>
+            <el-radio-group class="list" v-model="newLineInfo.author">
+              <el-radio
+                :label="item"
+                v-for="item in meeting.authors"
+                :key="item"
+                class="authorItem"
+              >{{item}}</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -54,38 +53,15 @@
       <el-form ref="form" label-width="100px" :model="meeting">
         <el-form-item label="会议记录：">
           <div id="app">
-            <div class="toolbar">
-              <button
-                @click="item.handle"
-                :title="item.text"
-                v-for="item in iconList"
-                v-bind:key="item.icon"
-                class="editButton"
-              >
-                <icon :name="item.icon"></icon>
-              </button>
-              <select @change="handleFontSizeChange">
-                <option
-                  v-for="item in fontSize"
-                  v-bind:key="item.value"
-                  :value="item.value"
-                >{{item.text}}</option>
-              </select>
-              <el-button type="text" class="preview" @click="handleShowPreview">预览</el-button>
-            </div>
-            <!-- <div
-              id="divContent"
-              class="editContent"
-              @input="handleContentChange"
-              @keydown="handleKeyDownChange"
-              @click="handleClick"
-            >-->
+            <ToolBar
+              :iconList="iconList"
+              :fontSize="fontSize"
+              :onFontSizeChange="handleFontSizeChange"
+              :onPreview="handleShowPreview"
+            ></ToolBar>
+
             <div class="editContent" id="divContent" @click="hideContext" @mousewheel="onScroll">
               <div v-for="(item,index) in meeting.info" :key="item.time" class="content">
-                <!-- <strong
-                  contenteditable="false"
-                  v-html="`第${index+1}条数据:[${item.time}秒] ${item.author}开始说：`"
-                ></strong>-->
                 <section class="ddl">
                   <DropDownList :name="item.author" :list="meeting.authors" :index="index"></DropDownList>
                 </section>
@@ -95,17 +71,20 @@
                     contenteditable="true"
                     @click="handleSelectOneClick"
                     @blur="handleBlur(index)"
-                    :class="item.hightlight?'hightlight':''"
+                    @focus="handleFocus"
+                    :class="item.hightlight?'hightlight contentDetail':'contentDetail'"
                   ></span>
-                  <button
-                    @click="item.handle"
-                    :title="item.text"
-                    v-for="item in contextList"
-                    v-bind:key="item.icon"
-                    class="editButton editButtonMore"
-                  >
-                    <icon :name="item.icon"></icon>
-                  </button>
+                  <span v-show="item.hightlight">
+                    <button
+                      @click="item.handle"
+                      :title="item.label"
+                      v-for="item in contextList"
+                      v-bind:key="item.icon"
+                      class="editButton editButtonMore"
+                    >
+                      <icon :name="item.icon" :title="item.label"></icon>
+                    </button>
+                  </span>
                 </section>
               </div>
             </div>
@@ -128,6 +107,14 @@
           ></audio>-->
         </el-form-item>
       </el-form>
+      <el-card class="contextMenu" v-show="showContext" :style="{left:position.x,top:position.y}">
+        <div
+          @click="item.handle"
+          v-for="item in contextList"
+          :key="item.value"
+          class="text item"
+        >{{item.label }}</div>
+      </el-card>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -139,6 +126,7 @@ import Spectrum from "./components/Spectrum.vue";
 import Preview from "./components/Preview.vue";
 import DropDownList from "./components/DropDownList.vue";
 import BasicInfo from "./components/BasicInfo.vue";
+import ToolBar from "./components/ToolBar.vue";
 import constants from "./constants/index";
 
 export default {
@@ -213,7 +201,8 @@ export default {
     Spectrum,
     Preview,
     DropDownList,
-    BasicInfo
+    BasicInfo,
+    ToolBar
   },
   created() {
     this.$store.dispatch("meeting/getMeetingById", this.$route.query.id);
@@ -265,9 +254,14 @@ export default {
         console.log("error:", e.message);
       }
     },
+    handleFocus: function() {
+      console.log(event.target.innerHTML);
+      if (event.target.innerHTML === "请输入内容") {
+        event.target.innerHTML = "";
+      }
+    },
     // 输入失去焦点时
     handleBlur: function(index) {
-      console.log("blur");
       let that = this;
       const { innerHTML } = event.target;
       if (innerHTML === "") {
@@ -281,7 +275,7 @@ export default {
         // }, 0);
 
         let editContent = [];
-        divContent.querySelectorAll("span").forEach(item => {
+        divContent.querySelectorAll("span[contenteditable]").forEach(item => {
           editContent.push(item.innerHTML);
         });
         this.editContent = editContent;
@@ -306,7 +300,7 @@ export default {
         msg = "请输入开始时间";
       }
       if (!author) {
-        msg = "请输入发言人";
+        msg = "请选择发言人";
       }
       if (msg) {
         this.$message({
@@ -439,7 +433,6 @@ export default {
       }
     },
     handleShowPreview: function() {
-      console.log(111);
       this.previewVisible = true;
     },
     handleHidePreview: function() {
@@ -560,6 +553,12 @@ export default {
         caretOffset = preCaretTextRange.text.length;
       }
       return caretOffset;
+    },
+    onMouseOver: function() {
+      this.$store.dispatch("meeting/setCurrentLineShowButton", {
+        currentLineIndex: this.currentLineIndex,
+        showEditButton: true
+      });
     }
   }
 };
@@ -637,8 +636,12 @@ li {
   display: flex;
   align-items: flex-start;
 }
+/*span默认得有一个边框，不然获取焦点没有文本时，会有异常 */
+.editContent .content .contentDetail {
+  border: 1px solid transparent;
+}
 .editContent .content .ddl {
-  flex: 1;
+  flex: 0 0 60px;
   white-space: nowrap;
   margin-right: 10px;
   line-height: 10px;
@@ -662,5 +665,9 @@ li {
 }
 .preview {
   margin-left: 10px;
+}
+.authorItem {
+  margin-bottom: 10px;
+  min-width: 70px;
 }
 </style>
