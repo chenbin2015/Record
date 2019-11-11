@@ -10,11 +10,13 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "fs-extra": "^8.1.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "mime-types": "^2.1.24",
     "morgan": "~1.9.1",
-    "nodemon": "^1.19.4"
+    "nodemon": "^1.19.4",
+    "send-ranges": "^3.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

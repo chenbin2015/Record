@@ -36,6 +36,25 @@ router.get('/getDetail', function(req, res, next) {
   })
 })
 
+/* GET users listing. */
+router.get('/getDetailMock', function(req, res, next) {
+  const {
+    query: { id }
+  } = req
+  let data = meetlingList.filter(item => item.id === +id)
+
+  if (data.length > 0) {
+    data = data[0]
+  } else {
+    data = {}
+  }
+  if (data.info && data.info.length > 0) {
+    data.infos = data.info
+    delete data.info
+  }
+  res.send(data)
+})
+
 router.get('/newlist', function(req, res, next) {
   setTimeout(() => {
     res.send({
