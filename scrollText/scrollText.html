@@ -1,0 +1,31 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>文字隐藏，点击滚动显示效果</title>
+</head>
+
+<body>
+    <div id="demo1"></div>
+    <div id="demo2"></div>
+    <div id="demo3"></div>
+    <script src='./scrollText.js'></script>
+    <script>
+        new scrollText({
+            id: '#demo1',
+            text: '我太短了，滚动不了'
+        })
+        new scrollText({
+            id: '#demo2',
+            text: '我是用来做测试的，你好呀，我好吗？你好，但是我们不合适，什么鬼？你敢不敢再说一次，我们不适合，说了怎么滴'
+        })
+        new scrollText({
+            id: '#demo3',
+            text: '我的宽度刚刚够，不信试试看'
+        })
+    </script>
+</body>
+
+</html>
